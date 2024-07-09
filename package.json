@@ -1,0 +1,33 @@
+{
+    "name": "nemanja-markovic-bluegrid-task",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "ts-node src/index.ts",
+        "dev": "nodemon --exec ts-node src/index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Nemanja43M/Nemanja-Markovic-Bluegrid-Task.git"
+    },
+    "author": "Nemanja Markovic",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Nemanja43M/Nemanja-Markovic-Bluegrid-Task/issues"
+    },
+    "homepage": "https://github.com/Nemanja43M/Nemanja-Markovic-Bluegrid-Task#readme",
+    "dependencies": {
+        "axios": "^1.7.2",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "ts-node": "^10.9.2"
+    },
+    "devDependencies": {
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.14.10",
+        "nodemon": "^3.1.4",
+        "typescript": "^5.5.3"
+    }
+}
