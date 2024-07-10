@@ -4,15 +4,19 @@ This task demonstrates a Node.js application built with Express that fetches dat
 
 By using Node.js streams, this application can handle large amounts of data efficiently. Streams allow processing data piece-by-piece (or chunk-by-chunk), which is particularly useful when working with large data sets or slow data sources. This approach helps to:
 
-# Reduce Memory Usage: 
+# Reduce Memory Usage:
+
 Instead of loading the entire response into memory, the application processes it in smaller chunks.
+
 # Improve Performance:
+
 Streams can start processing data as soon as it starts arriving, which can make the application more responsive.
+
 # Handle Backpressure:
- Streams provide a way to manage the flow of data, preventing the application from being overwhelmed by too much data at once.
+
+Streams provide a way to manage the flow of data, preventing the application from being overwhelmed by too much data at once.
 
 In this implementation, the data is streamed from the remote API using Axios. The response.data stream is then piped through a custom transform stream (UrlTransform). This transform stream processes each chunk of data to extract file URLs, build a nested structure, and convert it to JSON before passing it to the next stream, which is the HTTP response in this case.
- 
 
 # Project Structure
 

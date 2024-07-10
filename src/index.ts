@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response } from 'express';
-const dotenv = require('dotenv').config();
 
 import fileRouter from './routes/file.router';
 
