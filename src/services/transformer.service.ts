@@ -1,4 +1,5 @@
 import { Transform, TransformCallback } from 'stream';
+import { IStructure } from '../interfaces/interface';
 
 function extractFileUrlsFromString(inputString: string) {
     const fileUrlPattern = /"fileUrl":"([^"]+)"/g;
@@ -12,12 +13,8 @@ function extractFileUrlsFromString(inputString: string) {
     return fileUrls;
 }
 
-interface Structure {
-    [key: string]: any;
-}
-
-function buildStructure(arr: string[]): Structure {
-    const structure: Structure = {};
+function buildStructure(arr: string[]): IStructure {
+    const structure: IStructure = {};
 
     arr.forEach((url) => {
         const ipAddressMatch = url.match(/^http:\/\/([^:/]+)/);

@@ -1,5 +1,11 @@
 # Nemanja-Markovic-BlueGrid-Task
 
+# Pre-requisites
+
+Install Node.js (version 14 or later)
+
+# Overview
+
 This task demonstrates a Node.js application built with Express that fetches data from an external API, transforms it, and returns the transformed data as JSON. The application uses TypeScript for type safety and Streams for efficient data processing.To start application you must first do "npm install" command then "npm run dev" command.
 
 By using Node.js streams, this application can handle large amounts of data efficiently. Streams allow processing data piece-by-piece (or chunk-by-chunk), which is particularly useful when working with large data sets or slow data sources. This approach helps to:
