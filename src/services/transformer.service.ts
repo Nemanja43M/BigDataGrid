@@ -1,5 +1,6 @@
 import { Transform, TransformCallback } from 'stream';
 import { IStructure } from '../interfaces/interface';
+import { fileRepository } from '../repositories/file.repository';
 
 function extractFileUrlsFromString(inputString: string) {
     const fileUrlPattern = /"fileUrl":"([^"]+)"/g;
@@ -62,14 +63,34 @@ function buildStructure(arr: string[]): IStructure {
 }
 
 export class UrlTransform extends Transform {
+    private buffer: string[] = [];
+
     _transform(
-        obj: any,
+        chunk: any,
         _encoding: BufferEncoding,
         callback: TransformCallback
     ) {
-        const fileUrls = extractFileUrlsFromString(obj);
-        const jsonStructure = buildStructure(fileUrls);
-        this.push(JSON.stringify(jsonStructure, null, 2));
+        this.buffer.push(chunk.toString());
         callback();
+    }
+
+    _flush(callback: TransformCallback) {
+        try {
+            const data = this.buffer.join('');
+            const fileUrls = extractFileUrlsFromString(data);
+            const jsonStructure = buildStructure(fileUrls);
+
+            fileRepository
+                .save(jsonStructure)
+                .then(() => {
+                    this.buffer = [];
+                    callback();
+                })
+                .catch((error) => {
+                    callback(error);
+                });
+        } catch (error) {
+            error;
+        }
     }
 }

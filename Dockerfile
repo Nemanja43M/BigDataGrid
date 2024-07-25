@@ -1,20 +1,20 @@
-# Koristi node baziranu sliku
+# Use the official Node.js image as a base
 FROM node:14
 
-# Postavi radni direktorijum u kontejneru
+# Set the working directory inside the container
 WORKDIR /app
 
-# Kopiraj package.json i package-lock.json
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Instaliraj dependencies
+# Install the dependencies defined in package.json
 RUN npm install
 
-# Kopiraj ostale fajlove
+# Copy the rest of the application code to the working directory
 COPY . .
 
-# Otvori port
+# Inform Docker that the container will listen on port 5000
 EXPOSE 5000
 
-# Pokreni aplikaciju
+# Define the command to run the application
 CMD ["npm", "start"]

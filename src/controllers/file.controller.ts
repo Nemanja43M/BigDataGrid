@@ -1,16 +1,17 @@
 import { RequestHandler } from 'express';
-import { AxiosService } from '../services/axios.service';
-import { UrlTransform } from '../services/transformer.service';
-
-const URL = 'https://rest-test-eight.vercel.app/api/test';
+import { fileRepository } from '../repositories/file.repository';
 
 export const dataFileHandler: RequestHandler = async (req, res, next) => {
     try {
-        const axiosService = new AxiosService();
-        const response = await axiosService.streamGetRequest(URL);
+        const data = await fileRepository.get();
         res.setHeader('Content-Type', 'application/json');
-        response.data.pipe(new UrlTransform()).pipe(res);
+        res.json(data);
     } catch (error) {
-        next(error);
+        return res.status(500).json({
+            error: {
+                statusCode: 500,
+                message: 'Internal Server Error',
+            },
+        });
     }
 };
