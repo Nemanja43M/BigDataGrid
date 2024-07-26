@@ -12,7 +12,6 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 connectDB();
 
-app.use(requestLogger);
 app.use('/api/files', fileRouter);
 app.use(errorLogger);
 
