@@ -1,4 +1,5 @@
 import { CronJob } from 'cron';
+import logger from './logger.service';
 
 export class CronJobService {
     private job: CronJob;
@@ -9,6 +10,8 @@ export class CronJobService {
 
     startCronJob() {
         this.job.start();
-        console.log('Cron job started');
+        logger.info('Cron job started', {
+            metadata: { cronTime: this.cronTime },
+        });
     }
 }

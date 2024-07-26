@@ -1,6 +1,7 @@
 import { Transform, TransformCallback } from 'stream';
 import { IStructure } from '../interfaces/interface';
 import { fileRepository } from '../repositories/file.repository';
+import logger from './logger.service';
 
 function extractFileUrlsFromString(inputString: string) {
     const fileUrlPattern = /"fileUrl":"([^"]+)"/g;
@@ -87,10 +88,19 @@ export class UrlTransform extends Transform {
                     callback();
                 })
                 .catch((error) => {
+                    logger.error('Error saving data to the database', {
+                        metadata: { error: error.message, stack: error.stack },
+                    });
                     callback(error);
                 });
         } catch (error) {
-            error;
+            logger.error('Error in UrlTransform stream', {
+                metadata: {
+                    error: (error as Error).message,
+                    stack: (error as Error).stack,
+                },
+            });
+            callback(error as Error);
         }
     }
 }

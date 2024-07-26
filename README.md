@@ -1,12 +1,25 @@
 # Nemanja-Markovic-BlueGrid-Task
 
+# Mandatory
+
+First run command "docker compose up -d"
+Ensure that port 27017 is not being used by any other Docker container. If it is, stop the conflicting containers.
+Then run the command again: "docker compose up -d"
+
+To start application you must first do "npm install" command,
+then "npm run dev" command.
+
 # Pre-requisites
 
 Install Node.js (version 14 or later)
 
 # Overview
 
-This task demonstrates a Node.js application built with Express that fetches data from an external API, transforms it, and returns the transformed data as JSON. The application uses TypeScript for type safety and Streams for efficient data processing.To start application you must first do "npm install" command then "npm run dev" command.
+Upon starting the application, the saveLatesResponse function is invoked and cron job. This function calls an endpoint to fetch data. Initially, this process takes about 11 seconds to complete. Once the data is fetched, it is made available at the /api/files endpoint, where it can be accessed in the required data structure format in less than half a second.
+
+The application also sets up a cron job that runs every 60 seconds. This cron job updates the existing data by calling the same saveLatesResponse function, ensuring that the data remains up-to-date and is always available at the endpoint.
+
+Overall, this approach of using a cron job to periodically update and cache data in a local database provides a balance between efficient data retrieval and improved user experience. It optimizes both performance and reliability, ensuring that the application delivers fast and up-to-date data while minimizing external API load and potential issues.
 
 By using Node.js streams, this application can handle large amounts of data efficiently. Streams allow processing data piece-by-piece (or chunk-by-chunk), which is particularly useful when working with large data sets or slow data sources. This approach helps to:
 
@@ -31,6 +44,10 @@ file.controller.ts: Contains the logic for handling file data.
 file.router.ts: Defines the routing for file-related endpoints.
 axios.service.ts: Provides a service for making HTTP requests using Axios.
 transformer.service.ts: Defines the transformation logic for processing the data stream.
+cronJob.service.ts: Manages and schedules cron jobs using the cron library, initializes with a schedule and task, starts the job, and logs events.
+db.service.ts: Establishes a connection to MongoDB, handles logging for success and errors, and terminates the process on failure.
+logger.service.ts: Configures Winston for logging with levels (info and error), JSON formatting, timestamps, and different transports (console and file).
+fileModel.ts: Defines a Mongoose schema for storing file data in MongoDB with timestamps and flexible content format, and exports the File model.
 
 # Entry Point (index.ts):
 
@@ -60,3 +77,50 @@ Defines a Transform stream (UrlTransform) that processes the incoming data strea
 Extracts file URLs from the input data.
 Builds a nested structure based on the URLs.
 Outputs the transformed data as a JSON string.
+
+# CronJobService (cronJob.service.ts):
+
+Purpose: Manages and schedules cron jobs using the cron library.
+Constructor: Initializes a CronJob instance with a specified schedule (cronTime) and a task (onTick) to run at each interval.
+startCronJob: Starts the cron job and logs the event using the logger service. Logs include information about the cron job's schedule (cronTime).
+
+# ConnectDB (db.service.ts):
+
+Purpose: Establishes a connection to MongoDB using Mongoose.
+Connection URI: Uses the MONGO_URI environment variable or a default URI if not provided.
+Logging:
+Logs a success message when connected successfully.
+Logs an error message with detailed information if the connection fails.
+Error Handling:
+Differentiates between known errors (Error instances) and unknown errors.
+Logs error details including the message and stack trace, if available.
+Exit: Terminates the process with a non-zero status code if the connection fails.
+
+# Logger Configuration (logger.service.ts):
+
+Purpose: Configures a logging system using Winston to capture and store log messages.
+Logging Levels:
+info: Logs general information messages.
+error: Logs error messages specifically.
+Format:
+Timestamp: Adds a timestamp to each log entry.
+JSON: Formats log messages as JSON.
+Pretty Print: Makes JSON output more readable.
+Transports:
+Console: Logs messages to the console.
+File:
+error.log: Stores error messages.
+combined.log: Stores all log messages (both info and error).
+Export: Provides a logger instance for use throughout the application.
+
+# File Model (fileModel.ts):
+
+Purpose: Defines the Mongoose schema and model for storing file data in MongoDB.
+Schema Definition:
+data: Stores the file's content in a flexible format using Schema.Types.Mixed.
+createdAt: Timestamp for when the document was created, defaults to the current date and time.
+updatedAt: Timestamp for when the document was last updated, defaults to the current date and time.
+Model:
+Name: File
+Type: IFile (interface that defines the shape of the data)
+Export: Provides the File model for use in repository operations.

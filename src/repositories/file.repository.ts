@@ -1,4 +1,5 @@
 import File from '../models/fileModel';
+import logger from '../services/logger.service';
 
 export const fileRepository = {
     async save(data: Record<string, any>) {
